@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/xchgn/suigo/examples/get_coin_info"
+	"github.com/xchgn/suigo/examples/move_call_ex1"
 )
 
 func main() {
-	get_coin_info.Run()
+	move_call_ex1.Run()
 }

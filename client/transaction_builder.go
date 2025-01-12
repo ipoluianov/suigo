@@ -1,8 +1,9 @@
 package client
 
 import (
+	"encoding/base64"
+
 	"github.com/xchgn/suigo/txdata"
-	"github.com/xchgn/suigo/utils/base58"
 )
 
 type TransactionBuilder struct {
@@ -17,7 +18,7 @@ type TransactionBuilder struct {
 func NewTransactionBuilder(client *Client) *TransactionBuilder {
 	var c TransactionBuilder
 	c.client = client
-	c.gasBudget = uint64(100000000)
+	c.gasBudget = uint64(10000000)
 	return &c
 }
 
@@ -58,5 +59,5 @@ func (c *TransactionBuilder) Build() (string, error) {
 
 	bs := c.transactionData.ToBytes()
 
-	return base58.Encode(bs), nil
+	return base64.StdEncoding.EncodeToString(bs), nil
 }

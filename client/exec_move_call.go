@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -8,7 +9,6 @@ import (
 	"strconv"
 
 	"github.com/xchgn/suigo/txdata"
-	"github.com/xchgn/suigo/utils/base58"
 )
 
 type CoinObject struct {
@@ -123,28 +123,51 @@ func (c *Client) ExecMoveCall(params MoveCallParameters) (*TransactionExecutionR
 	cmd.Arguments = params.Arguments
 	tb.AddCommand(cmd)
 	txBytes, err := tb.Build()
-
-	// Prepare TxBytes
-	//txBytes, err := c.UnsafeMoveCall(gasCoinObjId, fmt.Sprint(gasBudget), params.PackageId, params.ModuleName, params.FunctionName, params.Arguments)
 	if err != nil {
+		fmt.Println("BUILD ERROR:", err)
 		return nil, err
 	}
 
-	//txBytesBS, _ := base64.StdEncoding.DecodeString(txBytes)
-	txBytesBS := base58.Decode(txBytes)
+	// Prepare TxBytes
+	/*	txBytes2, err := c.UnsafeMoveCall(gasCoinObjId, fmt.Sprint(gasBudget), cmd.PackageId, cmd.ModuleName, cmd.FunctionName, cmd.Arguments)
+		if err != nil {
+			return nil, err
+		}
 
-	fmt.Println("TXBYTES:", hex.EncodeToString(txBytesBS))
+		if len(txBytes) != len(txBytes2.TxBytes) {
+			fmt.Println("TXBYTES LENGTH MISMATCH")
+			return nil, errors.New("TXBYTES LENGTH MISMATCH")
+		}
+
+		mismatch := false
+		for i := 0; i < len(txBytes); i++ {
+			if txBytes[i] != txBytes2.TxBytes[i] {
+				mismatch = true
+				break
+			}
+		}
+		if mismatch {
+			fmt.Println("TXBYTES MISMATCH")
+			return nil, errors.New("TXBYTES MISMATCH")
+		}
+
+		fmt.Println("TXBYTES MATCH")
+	*/
+	//txBytesBS, _ := base64.StdEncoding.DecodeString(txBytes)
+	txBytesBS1, _ := base64.StdEncoding.DecodeString(txBytes)
+	//txBytesBS2, _ := base64.StdEncoding.DecodeString(txBytes2.TxBytes)
+
+	fmt.Println("TXBYTES1:", hex.EncodeToString(txBytesBS1))
+	//fmt.Println("TXBYTES2:", hex.EncodeToString(txBytesBS2))
 
 	trDataParsed := txdata.NewTransactionData()
-	_, err = trDataParsed.Parse(txBytesBS, 0)
+	_, err = trDataParsed.Parse(txBytesBS1, 0)
 	if err != nil {
 		fmt.Println("PARSE ERROR:", err)
 		return nil, err
 	}
-	bsParsed, _ := json.MarshalIndent(trDataParsed, "", "  ")
-	fmt.Println("PARSING SUCCESS:", string(bsParsed))
-
-	return nil, nil
+	//bsParsed, _ := json.MarshalIndent(trDataParsed, "", "  ")
+	//fmt.Println("PARSING SUCCESS:", string(bsParsed))
 
 	// Signature
 	txSigned, err := c.account.Signature(txBytes)

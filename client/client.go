@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"os"
 )
 
 type Client struct {
@@ -15,7 +16,7 @@ type Client struct {
 func NewClient(rpcURL string) *Client {
 	var c Client
 	c.rpcURL = rpcURL
-	c.account, _ = NewAccountFromMnemonic("reveal resist nothing diary romance toe immense then spirit nut problem hawk")
+	// c.account, _ = NewAccountFromMnemonic("")
 	return &c
 }
 
@@ -36,6 +37,15 @@ type RPCResponse struct {
 type RPCError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
+}
+
+func (c *Client) InitAccountFromFile(filePath string) error {
+	bs, err := os.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	c.account, err = NewAccountFromMnemonic(string(bs))
+	return err
 }
 
 func (c *Client) rpcCall(request RPCRequest) (response *RPCResponse, err error) {
