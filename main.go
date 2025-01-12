@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/xchgn/suigo/examples/move_call_ex1"
+	"github.com/xchgn/suigo/examples/exec_ptb"
 )
 
 func main() {
-	move_call_ex1.Run()
+	exec_ptb.Run()
 }

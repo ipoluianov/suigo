@@ -40,7 +40,7 @@ func parseCoinObject(obj interface{}) *CoinObject {
 	return &coin
 }
 
-func (c *Client) GetGasCoinObjId(amount uint64) string {
+/*func (c *Client) GetGasCoinObjId(amount uint64) string {
 	var query ObjectResponseQuery
 	query.Options.ShowType = true
 	query.Options.ShowOwner = true
@@ -61,7 +61,7 @@ func (c *Client) GetGasCoinObjId(amount uint64) string {
 		}
 	}
 	return ""
-}
+}*/
 
 type GasDataInfo struct {
 	ObjectId string
@@ -82,7 +82,6 @@ func (c *Client) GetGasCoinObj(amount uint64) (*GasDataInfo, error) {
 		return nil, err
 	}
 	for _, obj := range res.Data {
-		fmt.Println("OBJ:", obj.Data.ObjectId, obj.Data.Type)
 		if obj.Data.Type == "0x2::coin::Coin<0x2::sui::SUI>" {
 			coinObj := parseCoinObject(obj.Data.Content)
 			if coinObj.GetBalanceUint64() >= amount {

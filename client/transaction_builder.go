@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/base64"
+	"errors"
 
 	"github.com/xchgn/suigo/txdata"
 )
@@ -27,6 +28,10 @@ func (c *TransactionBuilder) AddCommand(cmd *TransactionBuilderMoveCall) {
 }
 
 func (c *TransactionBuilder) Build() (string, error) {
+	if c.client.account == nil {
+		return "", errors.New("account is not set")
+	}
+
 	c.transactionData = txdata.NewTransactionData()
 	c.transactionData.V1 = &txdata.TransactionDataV1{}
 	senderAddrBS := ParseAddress(c.client.account.Address)
