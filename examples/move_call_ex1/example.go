@@ -14,7 +14,7 @@ func Run() {
 		return
 	}
 	var p client.MoveCallParameters
-	p.PackageId = "0xbe66e3956632c8b8cb90211ecb329b9bb03afef9ba5d72472a7c240d3afe19fd"
+	p.PackageId = client.TEST_PACKAGE_ID
 	p.ModuleName = "example"
 	p.FunctionName = "ex1"
 	p.Arguments = []interface{}{}
