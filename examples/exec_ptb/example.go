@@ -15,17 +15,19 @@ func Run() {
 		cmd := client.NewTransactionBuilderMoveCall()
 		cmd.PackageId = client.TEST_PACKAGE_ID
 		cmd.ModuleName = "example"
-		cmd.FunctionName = "ex1"
-		cmd.Arguments = []interface{}{}
+		cmd.FunctionName = "ex14"
+		cmd.Arguments = []interface{}{
+			client.ArgVecU8([]uint8{1, 2, 3}),
+		}
 		tb.AddCommand(cmd)
 	}
-	res, err := cl.DryExecPTB(tb)
+	res, err := cl.ExecPTB(tb)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	fmt.Println("Status:", res.Effects.Status.Status)
 	bs, _ := json.MarshalIndent(res, "", "  ")
 	fmt.Println(string(bs))
+	fmt.Println("Status:", res.Effects.Status.Status)
 	//fmt.Println("Result Digest:", res.Digest)
 }
