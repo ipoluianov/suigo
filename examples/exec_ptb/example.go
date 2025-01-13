@@ -15,9 +15,13 @@ func Run() {
 		cmd := client.NewTransactionBuilderMoveCall()
 		cmd.PackageId = client.TEST_PACKAGE_ID
 		cmd.ModuleName = "example"
-		cmd.FunctionName = "ex14"
+		cmd.FunctionName = "ex12"
+		items := make([]string, 0)
+		items = append(items, "0x1111")
+		items = append(items, "0x2222")
+		items = append(items, "0x3333")
 		cmd.Arguments = []interface{}{
-			client.ArgVecU8([]uint8{1, 2, 3}),
+			client.ArgVecAddress(items),
 		}
 		tb.AddCommand(cmd)
 	}

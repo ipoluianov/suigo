@@ -26,7 +26,15 @@ type ArgU64 uint64
 type ArgU128 big.Int
 type ArgU256 big.Int
 
+type ArgVecAddress []string
+type ArgVecObject []string
+type ArgVecBool []bool
 type ArgVecU8 []uint8
+type ArgVecU16 []uint16
+type ArgVecU32 []uint32
+type ArgVecU64 []uint64
+type ArgVecU128 []big.Int
+type ArgVecU256 []big.Int
 
 func NewTransactionBuilderMoveCall() *TransactionBuilderMoveCall {
 	var c TransactionBuilderMoveCall
@@ -73,9 +81,21 @@ func (c *TransactionBuilderMoveCall) Build(builder *TransactionBuilder) error {
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
 			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgVecU16:
+			pIndex := c.buildArgumentVecU16(builder.transactionData.V1.Kind.ProgrammableTransaction, v)
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
 		case ArgU32:
 			value := uint32(v)
 			pIndex := c.buildArgumentU32(builder.transactionData.V1.Kind.ProgrammableTransaction, value)
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgVecU32:
+			pIndex := c.buildArgumentVecU32(builder.transactionData.V1.Kind.ProgrammableTransaction, v)
 			arg := txdata.Argument{}
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
@@ -87,9 +107,21 @@ func (c *TransactionBuilderMoveCall) Build(builder *TransactionBuilder) error {
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
 			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgVecU64:
+			pIndex := c.buildArgumentVecU64(builder.transactionData.V1.Kind.ProgrammableTransaction, v)
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
 		case ArgU128:
 			value := big.Int(v)
 			pIndex := c.buildArgumentU128(builder.transactionData.V1.Kind.ProgrammableTransaction, value)
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgVecU128:
+			pIndex := c.buildArgumentVecU128(builder.transactionData.V1.Kind.ProgrammableTransaction, v)
 			arg := txdata.Argument{}
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
@@ -101,14 +133,32 @@ func (c *TransactionBuilderMoveCall) Build(builder *TransactionBuilder) error {
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
 			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgVecU256:
+			pIndex := c.buildArgumentVecU256(builder.transactionData.V1.Kind.ProgrammableTransaction, v)
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
 		case ArgAddress:
 			pIndex := c.buildArgumentAddress(builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
 			arg := txdata.Argument{}
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
 			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgVecAddress:
+			pIndex := c.buildArgumentVecAddress(builder.transactionData.V1.Kind.ProgrammableTransaction, v)
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
 		case ArgObject:
 			pIndex := c.buildArgumentObject(builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgVecObject:
+			pIndex := c.buildArgumentVecObject(builder.transactionData.V1.Kind.ProgrammableTransaction, v)
 			arg := txdata.Argument{}
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
@@ -154,6 +204,24 @@ func (c *TransactionBuilderMoveCall) buildArgumentU16(tx *txdata.ProgrammableTra
 	return len(tx.Inputs) - 1
 }
 
+func (c *TransactionBuilderMoveCall) buildArgumentVecU16(tx *txdata.ProgrammableTransaction, value []uint16) int {
+	result := make([]byte, 0)
+	bsSize := txdata.SerializeULEB128(len(value))
+	result = append(result, bsSize...)
+
+	bs := make([]byte, 2)
+	for _, v := range value {
+		binary.LittleEndian.PutUint16(bs, v)
+		result = append(result, bs...)
+	}
+
+	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
+		Type: txdata.CallArgTypePure,
+		Pure: result,
+	})
+	return len(tx.Inputs) - 1
+}
+
 func (c *TransactionBuilderMoveCall) buildArgumentU32(tx *txdata.ProgrammableTransaction, value uint32) int {
 	bs := make([]byte, 4)
 	binary.LittleEndian.PutUint32(bs, value)
@@ -164,12 +232,48 @@ func (c *TransactionBuilderMoveCall) buildArgumentU32(tx *txdata.ProgrammableTra
 	return len(tx.Inputs) - 1
 }
 
+func (c *TransactionBuilderMoveCall) buildArgumentVecU32(tx *txdata.ProgrammableTransaction, value []uint32) int {
+	result := make([]byte, 0)
+	bsSize := txdata.SerializeULEB128(len(value))
+	result = append(result, bsSize...)
+
+	bs := make([]byte, 4)
+	for _, v := range value {
+		binary.LittleEndian.PutUint32(bs, v)
+		result = append(result, bs...)
+	}
+
+	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
+		Type: txdata.CallArgTypePure,
+		Pure: result,
+	})
+	return len(tx.Inputs) - 1
+}
+
 func (c *TransactionBuilderMoveCall) buildArgumentU64(tx *txdata.ProgrammableTransaction, value uint64) int {
 	bs := make([]byte, 8)
 	binary.LittleEndian.PutUint64(bs, value)
 	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
 		Type: txdata.CallArgTypePure,
 		Pure: bs,
+	})
+	return len(tx.Inputs) - 1
+}
+
+func (c *TransactionBuilderMoveCall) buildArgumentVecU64(tx *txdata.ProgrammableTransaction, value []uint64) int {
+	result := make([]byte, 0)
+	bsSize := txdata.SerializeULEB128(len(value))
+	result = append(result, bsSize...)
+
+	bs := make([]byte, 8)
+	for _, v := range value {
+		binary.LittleEndian.PutUint64(bs, v)
+		result = append(result, bs...)
+	}
+
+	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
+		Type: txdata.CallArgTypePure,
+		Pure: result,
 	})
 	return len(tx.Inputs) - 1
 }
@@ -187,6 +291,27 @@ func (c *TransactionBuilderMoveCall) buildArgumentU128(tx *txdata.ProgrammableTr
 	return len(tx.Inputs) - 1
 }
 
+func (c *TransactionBuilderMoveCall) buildArgumentVecU128(tx *txdata.ProgrammableTransaction, value []big.Int) int {
+	result := make([]byte, 0)
+	bsSize := txdata.SerializeULEB128(len(value))
+	result = append(result, bsSize...)
+
+	bs := make([]byte, 16)
+	for _, v := range value {
+		bigEndBS := v.Bytes()
+		for i := 0; i < len(bigEndBS) && i < 16; i++ {
+			bs[i] = bigEndBS[len(bigEndBS)-1-i]
+		}
+		result = append(result, bs...)
+	}
+
+	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
+		Type: txdata.CallArgTypePure,
+		Pure: result,
+	})
+	return len(tx.Inputs) - 1
+}
+
 func (c *TransactionBuilderMoveCall) buildArgumentU256(tx *txdata.ProgrammableTransaction, value big.Int) int {
 	bs := make([]byte, 32)
 	bigEndBS := value.Bytes()
@@ -196,6 +321,27 @@ func (c *TransactionBuilderMoveCall) buildArgumentU256(tx *txdata.ProgrammableTr
 	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
 		Type: txdata.CallArgTypePure,
 		Pure: bs,
+	})
+	return len(tx.Inputs) - 1
+}
+
+func (c *TransactionBuilderMoveCall) buildArgumentVecU256(tx *txdata.ProgrammableTransaction, value []big.Int) int {
+	result := make([]byte, 0)
+	bsSize := txdata.SerializeULEB128(len(value))
+	result = append(result, bsSize...)
+
+	bs := make([]byte, 32)
+	for _, v := range value {
+		bigEndBS := v.Bytes()
+		for i := 0; i < len(bigEndBS) && i < 32; i++ {
+			bs[i] = bigEndBS[len(bigEndBS)-1-i]
+		}
+		result = append(result, bs...)
+	}
+
+	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
+		Type: txdata.CallArgTypePure,
+		Pure: result,
 	})
 	return len(tx.Inputs) - 1
 }
@@ -213,6 +359,10 @@ func (c *TransactionBuilderMoveCall) buildArgumentObject(tx *txdata.Programmable
 	return len(tx.Inputs) - 1
 }
 
+func (c *TransactionBuilderMoveCall) buildArgumentVecObject(tx *txdata.ProgrammableTransaction, objectId []string) int {
+	panic("not implemented")
+}
+
 func (c *TransactionBuilderMoveCall) buildArgumentAddress(tx *txdata.ProgrammableTransaction, value string) int {
 	bs := make([]byte, 32)
 	bsData := utils.ParseHex(value)
@@ -227,6 +377,31 @@ func (c *TransactionBuilderMoveCall) buildArgumentAddress(tx *txdata.Programmabl
 	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
 		Type: txdata.CallArgTypePure,
 		Pure: bs,
+	})
+	return len(tx.Inputs) - 1
+}
+
+func (c *TransactionBuilderMoveCall) buildArgumentVecAddress(tx *txdata.ProgrammableTransaction, value []string) int {
+	result := make([]byte, 0)
+	bsSize := txdata.SerializeULEB128(len(value))
+	result = append(result, bsSize...)
+
+	bs := make([]byte, 32)
+	for i := 0; i < len(value); i++ {
+		bsData := utils.ParseHex(value[i])
+		if len(bsData) > 32 {
+			bsData = bsData[len(bsData)-32:] // TODO: error
+		}
+		for len(bsData) < 32 {
+			bsData = append([]byte{0}, bsData...)
+		}
+		copy(bs, bsData)
+		result = append(result, bs...)
+	}
+
+	tx.Inputs = append(tx.Inputs, &txdata.CallArg{
+		Type: txdata.CallArgTypePure,
+		Pure: result,
 	})
 	return len(tx.Inputs) - 1
 }
