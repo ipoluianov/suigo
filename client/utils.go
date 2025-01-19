@@ -109,6 +109,38 @@ type ObjectInfo struct {
 	Data ObjectInfoData `json:"data"`
 }
 
+type SuiObjectResponse struct {
+	Data  ObjectData          `json:"data"`
+	Error ObjectResponseError `json:"error"`
+}
+
+type ObjectResponseError struct {
+	Code int `json:"code"`
+}
+
+type ObjectData struct {
+	Bcs                 RawData               `json:"bcs"`
+	Content             interface{}           `json:"content"`
+	Digest              string                `json:"digest"`
+	Display             DisplayFieldsResponse `json:"display"`
+	ObjectId            string                `json:"objectId"`
+	Owner               Owner                 `json:"owner"`
+	PreviousTransaction string                `json:"previousTransaction"`
+	StorageRebate       string                `json:"storageRebate"`
+	Type                string                `json:"type"`
+	Version             string                `json:"version"`
+}
+
+type RawData struct {
+	BcsBytes          string `json:"bcsBytes"`
+	DataType          string `json:"dataType"`
+	HasPublicTransfer bool   `json:"hasPublicTransfer"`
+	Type              string `json:"type"`
+	Version           int    `json:"version"`
+}
+
+type DisplayFieldsResponse interface{}
+
 type ObjectsPage struct {
 	Data        []ObjectInfo `json:"data"`
 	HasNextPage bool         `json:"hasNextPage"`

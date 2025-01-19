@@ -1,7 +1,7 @@
 package main
 
-import "github.com/xchgn/suigo/examples/exec_ptb"
+import "github.com/xchgn/suigo/examples/get_object"
 
 func main() {
-	exec_ptb.Run()
+	get_object.Run()
 }
