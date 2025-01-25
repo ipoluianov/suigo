@@ -2,7 +2,6 @@ package client
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // Params:
@@ -28,17 +27,17 @@ func (c *Client) GetDynamicFieldObject(parentObjectId string, fieldType string, 
 		},
 	}
 
-	requestBodyBytes, _ := json.MarshalIndent(requestBody, "", "  ")
-	fmt.Println("Request:", string(requestBodyBytes))
+	//requestBodyBytes, _ := json.MarshalIndent(requestBody, "", "  ")
+	//fmt.Println("Request:", string(requestBodyBytes))
 
 	res, err := c.rpcCall(requestBody)
 	if err != nil {
 		return
 	}
 
-	fmt.Println(string(res.Result))
+	/*fmt.Println(string(res.Result))
 	fmt.Println("")
-	fmt.Println("")
+	fmt.Println("")*/
 
 	err = json.Unmarshal(res.Result, &objData)
 	if err != nil {

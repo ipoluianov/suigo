@@ -2,7 +2,6 @@ package client
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 func (c *Client) GetObject(objectId string, options GetObjectShowOptions) (objData SuiObjectResponse, err error) {
@@ -21,9 +20,9 @@ func (c *Client) GetObject(objectId string, options GetObjectShowOptions) (objDa
 		return
 	}
 
-	fmt.Println(string(res.Result))
+	/*fmt.Println(string(res.Result))
 	fmt.Println("")
-	fmt.Println("")
+	fmt.Println("")*/
 
 	err = json.Unmarshal(res.Result, &objData)
 	if err != nil {
