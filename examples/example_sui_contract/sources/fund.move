@@ -16,3 +16,7 @@ public(package) fun create_fund(ctx: &mut TxContext) {
 public fun ex2(f: &mut Fund, _ctx: &mut TxContext) {
     f.counter = f.counter + 1;
 }
+
+public fun ex3(f: &mut Fund, _ctx: &mut TxContext) {
+    f.counter = f.counter + 1;
+}

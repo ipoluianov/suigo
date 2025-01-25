@@ -16,7 +16,7 @@ func Run() {
 	var p client.MoveCallParameters
 	p.PackageId = client.TEST_PACKAGE_ID
 	p.ModuleName = "example"
-	p.FunctionName = "ex1"
+	p.FunctionName = "ex01"
 	p.Arguments = []interface{}{}
 	res, err := cl.ExecMoveCall(p)
 	if err != nil {
