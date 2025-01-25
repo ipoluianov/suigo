@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/xchgn/suigo/examples/move_call_ex1"
+	"github.com/xchgn/suigo/examples/table_item"
 )
 
 func main() {
-	move_call_ex1.Run()
+	table_item.Run()
 }
