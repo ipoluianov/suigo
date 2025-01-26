@@ -48,6 +48,10 @@ func (c *Client) InitAccountFromFile(filePath string) error {
 	return err
 }
 
+func (c *Client) Account() *Account {
+	return c.account
+}
+
 func (c *Client) rpcCall(request RPCRequest) (response *RPCResponse, err error) {
 	requestJSON, err := json.Marshal(request)
 	if err != nil {
