@@ -18,7 +18,7 @@ func Run() {
 	p.ModuleName = "example"
 	p.FunctionName = "ex01"
 	p.Arguments = []interface{}{}
-	res, err := cl.ExecMoveCall(p)
+	res, err := cl.ExecMoveCall(p, client.DEFAULT_GAS_PRICE)
 	if err != nil {
 		fmt.Println("ERROR:", err)
 		return

@@ -19,7 +19,7 @@ func Exec() {
 	params.FunctionName = "ex1"
 	params.Arguments = []interface{}{}
 
-	res, err := cl.ExecMoveCall(params)
+	res, err := cl.ExecMoveCall(params, DEFAULT_GAS_PRICE)
 	if err != nil {
 		fmt.Println("ERROR:", err)
 		return
@@ -115,7 +115,7 @@ func ExampleExecuteEx1() {
 	params.FunctionName = "ex1"
 	params.Arguments = []interface{}{}
 
-	res, err := cl.ExecMoveCall(params)
+	res, err := cl.ExecMoveCall(params, DEFAULT_GAS_PRICE)
 	if err != nil {
 		fmt.Println("ERROR:", err)
 		return

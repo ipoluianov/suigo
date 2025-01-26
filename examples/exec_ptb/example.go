@@ -25,7 +25,7 @@ func Run() {
 		}
 		tb.AddCommand(cmd)
 	}
-	res, err := cl.ExecPTB(tb)
+	res, err := cl.ExecPTB(tb, client.DEFAULT_GAS_PRICE)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

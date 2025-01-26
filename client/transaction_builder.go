@@ -27,7 +27,7 @@ func (c *TransactionBuilder) AddCommand(cmd *TransactionBuilderMoveCall) {
 	c.commands = append(c.commands, cmd)
 }
 
-func (c *TransactionBuilder) Build() (string, error) {
+func (c *TransactionBuilder) Build(gasPrice uint64) (string, error) {
 	if c.client.account == nil {
 		return "", errors.New("account is not set")
 	}
@@ -40,7 +40,7 @@ func (c *TransactionBuilder) Build() (string, error) {
 
 	var gasData txdata.GasData
 	gasData.Owner = senderAddrBS
-	gasData.Price = 750 // TODO: get from chain
+	gasData.Price = gasPrice
 	gasData.Budget = c.gasBudget
 	// Get GAS coin information
 	gasCoinObj, err := c.client.GetGasCoinObj(c.gasBudget)

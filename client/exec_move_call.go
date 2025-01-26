@@ -109,7 +109,7 @@ type MoveCallParameters struct {
 	Arguments    []interface{} `json:"arguments"`
 }
 
-func (c *Client) ExecMoveCall(params MoveCallParameters) (*TransactionExecutionResult, error) {
+func (c *Client) ExecMoveCall(params MoveCallParameters, gasPrice uint64) (*TransactionExecutionResult, error) {
 	// Prepare gas coin
 	//gasBudget := uint64(100000000)
 	//gasCoinObjId := c.GetGasCoinObjId(gasBudget)
@@ -121,7 +121,7 @@ func (c *Client) ExecMoveCall(params MoveCallParameters) (*TransactionExecutionR
 	cmd.FunctionName = params.FunctionName
 	cmd.Arguments = params.Arguments
 	tb.AddCommand(cmd)
-	txBytes, err := tb.Build()
+	txBytes, err := tb.Build(gasPrice)
 	if err != nil {
 		fmt.Println("BUILD ERROR:", err)
 		return nil, err

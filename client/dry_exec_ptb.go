@@ -1,7 +1,7 @@
 package client
 
-func (c *Client) DryExecPTB(builder *TransactionBuilder) (*DryRunTransactionBlockResponse, error) {
-	txBytes, err := builder.Build()
+func (c *Client) DryExecPTB(builder *TransactionBuilder, gasPrice uint64) (*DryRunTransactionBlockResponse, error) {
+	txBytes, err := builder.Build(gasPrice)
 	if err != nil {
 		return nil, err
 	}

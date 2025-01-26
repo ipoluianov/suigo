@@ -1,7 +1,7 @@
 package client
 
-func (c *Client) ExecPTB(builder *TransactionBuilder) (*TransactionExecutionResult, error) {
-	txBytes, err := builder.Build()
+func (c *Client) ExecPTB(builder *TransactionBuilder, gasPrice uint64) (*TransactionExecutionResult, error) {
+	txBytes, err := builder.Build(gasPrice)
 	if err != nil {
 		return nil, err
 	}
