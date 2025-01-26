@@ -155,7 +155,14 @@ func (c *TransactionBuilderMoveCall) Build(builder *TransactionBuilder) error {
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
 			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
 		case ArgSharedObject:
-			pIndex := c.buildArgumentSharedObject(builder, builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
+			var pIndex int
+			if existingObjectRef, ok := builder.objectRefs[string(v)]; ok {
+				pIndex = existingObjectRef
+			} else {
+				pIndex = c.buildArgumentSharedObject(builder, builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
+				builder.objectRefs[string(v)] = pIndex
+			}
+			//pIndex = c.buildArgumentSharedObject(builder, builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
 			arg := txdata.Argument{}
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)

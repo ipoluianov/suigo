@@ -14,6 +14,7 @@ type TransactionBuilder struct {
 	commands []*TransactionBuilderMoveCall
 
 	transactionData *txdata.TransactionData
+	objectRefs      map[string]int
 }
 
 func NewTransactionBuilder(client *Client) *TransactionBuilder {
