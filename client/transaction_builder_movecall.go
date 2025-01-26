@@ -3,7 +3,9 @@ package client
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"math/big"
+	"strconv"
 
 	"github.com/xchgn/suigo/txdata"
 	"github.com/xchgn/suigo/utils"
@@ -17,7 +19,8 @@ type TransactionBuilderMoveCall struct {
 }
 
 type ArgAddress string
-type ArgObject string
+type ArgSharedObject string
+type ArgImmObject string
 type ArgBool bool
 type ArgU8 uint8
 type ArgU16 uint16
@@ -151,8 +154,14 @@ func (c *TransactionBuilderMoveCall) Build(builder *TransactionBuilder) error {
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
 			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
-		case ArgObject:
-			pIndex := c.buildArgumentObject(builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
+		case ArgSharedObject:
+			pIndex := c.buildArgumentSharedObject(builder, builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
+			arg := txdata.Argument{}
+			arg.ArgumentType = txdata.ArgumentTypeInput
+			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
+			cmd.MoveCall.Arguments = append(cmd.MoveCall.Arguments, arg)
+		case ArgImmObject:
+			pIndex := c.buildArgumentImmObject(builder, builder.transactionData.V1.Kind.ProgrammableTransaction, string(v))
 			arg := txdata.Argument{}
 			arg.ArgumentType = txdata.ArgumentTypeInput
 			arg.ArgumentInput = txdata.ArgumentInput(pIndex)
@@ -346,14 +355,70 @@ func (c *TransactionBuilderMoveCall) buildArgumentVecU256(tx *txdata.Programmabl
 	return len(tx.Inputs) - 1
 }
 
-func (c *TransactionBuilderMoveCall) buildArgumentObject(tx *txdata.ProgrammableTransaction, objectId string) int {
+func (c *TransactionBuilderMoveCall) buildArgumentSharedObject(builder *TransactionBuilder, tx *txdata.ProgrammableTransaction, objectId string) int {
+	//var digest string
+	var version uint64
+
+	/*objData, err := builder.client.GetObject(objectId, GetObjectShowOptions{})
+	if err == nil {
+		//digest = objData.Data.Digest
+		version, _ = strconv.ParseUint(objData.Data.Version, 10, 64)
+	}*/
+
+	var err error
+
+	version, err = builder.client.GetInitialSharedVersion(objectId)
+	if err != nil {
+		fmt.Println("GetInitialSharedVersion Error:", err)
+	}
+
+	mutable := true
+
+	if objectId == CLOCK_OBJECT_ID {
+		mutable = false
+	}
+
+	// fmt.Println("OBJ VERSION FOR SHARED:", version)
+	// fmt.Println("OBJ DIGEST FOR SHARED:", digest)
+
 	var arg txdata.CallArg
 	arg.Type = txdata.CallArgTypeObject
 	var objectArg txdata.ObjectArg
 	objectArg.Type = txdata.ObjectArgTypeSharedObject
 	var sharedObj txdata.SharedObject
 	sharedObj.Id.SetHex(objectId)
+	sharedObj.InitialSharedVersion = txdata.SequenceNumber(version)
+	sharedObj.Mutable = mutable
 	objectArg.SharedObject = &sharedObj
+	arg.Object = &objectArg
+	tx.Inputs = append(tx.Inputs, &arg)
+	return len(tx.Inputs) - 1
+}
+
+func (c *TransactionBuilderMoveCall) buildArgumentImmObject(builder *TransactionBuilder, tx *txdata.ProgrammableTransaction, objectId string) int {
+	var digest string
+	var version uint64
+	// Get Object Version
+	objData, err := builder.client.GetObject(objectId, GetObjectShowOptions{})
+	if err == nil {
+		fmt.Println("OBJ DIGEST:", objData.Data.Digest)
+		digest = objData.Data.Digest
+		version, _ = strconv.ParseUint(objData.Data.Version, 10, 64)
+	}
+
+	// Get Object Digest
+
+	var arg txdata.CallArg
+	arg.Type = txdata.CallArgTypeObject
+	var objectArg txdata.ObjectArg
+	objectArg.Type = txdata.ObjectArgTypeImmOrOwnedObject
+	var immObj txdata.ObjectRef
+	immObj.ObjectID.SetHex(objectId)
+	immObj.SequenceNumber = txdata.SequenceNumber(version)
+	immObj.ObjectDigest.SetBase58(digest)
+	//immObj.ObjectDigest.
+	//sharedObj.Id.SetHex(objectId)
+	objectArg.ImmOrOwnedObject = &immObj
 	arg.Object = &objectArg
 	tx.Inputs = append(tx.Inputs, &arg)
 	return len(tx.Inputs) - 1

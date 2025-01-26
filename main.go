@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/xchgn/suigo/examples/table_item"
+	"github.com/xchgn/suigo/examples/exec_ptb"
 )
 
 func main() {
-	table_item.Run()
+	exec_ptb.Run()
 }

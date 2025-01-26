@@ -9,13 +9,15 @@ import (
 )
 
 type Client struct {
-	rpcURL  string
-	account *Account
+	rpcURL                string
+	account               *Account
+	initialSharedVersions map[string]uint64
 }
 
 func NewClient(rpcURL string) *Client {
 	var c Client
 	c.rpcURL = rpcURL
+	c.initialSharedVersions = make(map[string]uint64)
 	// c.account, _ = NewAccountFromMnemonic("")
 	return &c
 }
@@ -50,6 +52,19 @@ func (c *Client) InitAccountFromFile(filePath string) error {
 
 func (c *Client) Account() *Account {
 	return c.account
+}
+
+func (c *Client) GetInitialSharedVersion(sharedObjectAddress string) (uint64, error) {
+	if ver, ok := c.initialSharedVersions[sharedObjectAddress]; ok {
+		return ver, nil
+	}
+
+	ver, err := GetInitialSharedVersion(TESTNET_GRAPHQL_URL, sharedObjectAddress)
+	if err != nil {
+		return 0, err
+	}
+
+	return ver, nil
 }
 
 func (c *Client) rpcCall(request RPCRequest) (response *RPCResponse, err error) {

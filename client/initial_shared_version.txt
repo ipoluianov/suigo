@@ -1,0 +1,11 @@
+{
+  object(address: "<object_address>") {
+    version
+    owner {
+      __typename
+      ... on Shared {
+        initialSharedVersion
+      }
+    }
+  }
+}
