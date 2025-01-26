@@ -21,6 +21,7 @@ func NewTransactionBuilder(client *Client) *TransactionBuilder {
 	var c TransactionBuilder
 	c.client = client
 	c.gasBudget = uint64(10000000)
+	c.objectRefs = make(map[string]int)
 	return &c
 }
 
