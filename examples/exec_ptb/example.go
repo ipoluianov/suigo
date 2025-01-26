@@ -19,7 +19,7 @@ func Run() {
 		items := make([]string, 0)
 		items = append(items, "0x1111")
 		items = append(items, "0x2222")
-		items = append(items, "0x3333")
+		items = append(items, "0x3334")
 		cmd.Arguments = []interface{}{
 			client.ArgVecAddress(items),
 		}
