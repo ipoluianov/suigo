@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/xchgn/suigo/txdata"
+	"github.com/ipoluianov/suigo/txdata"
 )
 
 type CoinObject struct {

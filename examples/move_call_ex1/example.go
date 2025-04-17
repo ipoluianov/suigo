@@ -3,7 +3,7 @@ package move_call_ex1
 import (
 	"fmt"
 
-	"github.com/xchgn/suigo/client"
+	"github.com/ipoluianov/suigo/client"
 )
 
 func Run() {

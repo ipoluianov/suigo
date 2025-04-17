@@ -3,7 +3,7 @@ package txdata
 import (
 	"encoding/hex"
 
-	"github.com/xchgn/suigo/utils"
+	"github.com/ipoluianov/suigo/utils"
 )
 
 type ObjectID [32]byte

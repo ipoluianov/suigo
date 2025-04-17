@@ -3,7 +3,7 @@ package movecallclock
 import (
 	"fmt"
 
-	"github.com/xchgn/suigo/client"
+	"github.com/ipoluianov/suigo/client"
 )
 
 const (

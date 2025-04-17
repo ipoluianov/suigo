@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"github.com/xchgn/suigo/txdata"
+	"github.com/ipoluianov/suigo/txdata"
 )
 
 type TransactionBuilder struct {

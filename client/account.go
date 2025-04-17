@@ -8,7 +8,7 @@ import (
 	"log"
 	"math"
 
-	"github.com/xchgn/suigo/utils/bip39"
+	"github.com/ipoluianov/suigo/utils/bip39"
 	"golang.org/x/crypto/blake2b"
 )
 

@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/xchgn/suigo/txdata"
+	"github.com/ipoluianov/suigo/txdata"
 )
 
 func Exec() {

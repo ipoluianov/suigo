@@ -1,4 +1,4 @@
-module github.com/xchgn/suigo
+module github.com/ipoluianov/suigo
 
 go 1.23.4
 

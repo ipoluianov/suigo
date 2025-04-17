@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/xchgn/suigo/client"
+	"github.com/ipoluianov/suigo/client"
 )
 
 func Run() {

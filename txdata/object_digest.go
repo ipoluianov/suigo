@@ -3,7 +3,7 @@ package txdata
 import (
 	"encoding/hex"
 
-	"github.com/xchgn/suigo/utils/base58"
+	"github.com/ipoluianov/suigo/utils/base58"
 )
 
 type ObjectDigest struct {

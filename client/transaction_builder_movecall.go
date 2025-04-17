@@ -7,8 +7,8 @@ import (
 	"math/big"
 	"strconv"
 
-	"github.com/xchgn/suigo/txdata"
-	"github.com/xchgn/suigo/utils"
+	"github.com/ipoluianov/suigo/txdata"
+	"github.com/ipoluianov/suigo/utils"
 )
 
 type TransactionBuilderMoveCall struct {

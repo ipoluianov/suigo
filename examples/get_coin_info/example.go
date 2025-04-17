@@ -3,7 +3,7 @@ package get_coin_info
 import (
 	"fmt"
 
-	"github.com/xchgn/suigo/client"
+	"github.com/ipoluianov/suigo/client"
 )
 
 func Run() {

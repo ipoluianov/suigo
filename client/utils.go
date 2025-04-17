@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/xchgn/suigo/txdata"
+	"github.com/ipoluianov/suigo/txdata"
 )
 
 func ParseAddress(addrStr string) txdata.SuiAddress {
